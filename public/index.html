@@ -11,21 +11,25 @@
 <body>
     
     <div class="w-screen flex items-center flex-col h-5/6">
-        <h1 class="py-12 text-4xl poppins">MeteoLogan | Tu App meteorologica favorita</h1>
+        <h1 class="mt-12 mb-6 text-4xl poppins">MeteoLogan | Tu App meteorologica favorita</h1>
         <div class="min-w-[450px]">
-            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required />
-                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                <input type="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Madrid" required />
+                <button type="submit" id="btn-search" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Buscar</button>
             </div>
         </div>
+        <p class="boxMessageSearch h-7"></p>
         
-        <div class="py-12 grid grid-cols-3 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 h-20" id="grid"></div>
+        <div class="my-4 grid grid-cols-3 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-5 h-20" id="grid"></div>
+        <div class="my-4 cardBG w-5/6 flex h-[70vh] hidden relative" id="infoCityBox">
+            <a id="backButton" class="absolute top-6 left-6 cursor-pointer">Volver al incicio</a>
+        </div>
     </div>
 
 

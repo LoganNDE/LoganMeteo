@@ -1,47 +1,42 @@
 window.onload = () =>{
-
+    //Lista de las cuidades que saldran en el menu principal
     let popularCities = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Murcia', 'Cuenca']
+    const searchBar = document.querySelector('#search');
+    const btnSearch = document.querySelector('#btn-search');
+    const boxMessageSearch = document.querySelector('.boxMessageSearch');
+    const btnBack = document.querySelector('#backButton')
+    const gridMain = document.querySelector('#grid');
+    const infoCityBox = document.querySelector('#infoCityBox');
 
 
 
     async function getDataCity(city = null) {
+        if (boxMessageSearch) deleteBoxMessage();
         let response = await fetch('http://www.alpati.net/DWEC/cities/')
         let responseJSON = await response.json()
-        console.log(responseJSON);
-        let filterES = responseJSON.filter(city => city[5] === 'ES');
+        //console.log(responseJSON);
+        let citiesListES = responseJSON.filter(city => city[5] === 'ES');
 
     
         if (city){
-            filterES.forEach(ciudades => {
-                if (ciudades[2] === city && ciudades[5] === 'ES'){
-                    console.log(ciudades);
-                    createItemsDOM(ciudades);
-                }
+            cityCheck = false;
+            citiesListES.forEach(ciudades => {
+                if (ciudades[2] === city){
+                    console.log(typeof(ciudades));
+                    createItemsDOM(ciudades, uniqueCity = true);
+                    cityCheck = true;
+                }   
             });
-        }else{
-            createItemsDOM(filterES)
-        }
-    }
-    
-    /*
-    async function saveMeteoInfo(cities, latitude = null, longitude = null) {
-        let meteoInfoDefault = [];
-        if (Array.isArray(cities)){
-            
-            cities.forEach(city => {
-                let data = getMetaInfo(city[3], city[4])
-                meteoInfoDefault.push(data);
-            });
-            console.log(data);
-        }
-    }
-    */
 
-    async function getMetaInfoPrevious(latitude, longitude) {
-        let response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relative_humidity_2m,precipitation_probability&forecast_days=1`);
-        let responseJSON = await response.json();
-        return responseJSON;
-    }
+            if (!cityCheck){
+                boxMessageSearch.classList.add('my-2', 'text-red-700')
+                boxMessageSearch.textContent = 'Ciudad no encontrada, asegurese que la ciudad deseada esté escrita correctamente';
+            }
+
+        }else{
+            createItemsDOM(citiesListES)
+        }
+    };
 
     async function getMetaInfoCurrent(latitude, longitude) {
         let response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,is_day,precipitation`);
@@ -50,11 +45,8 @@ window.onload = () =>{
     }
     
 
-
-
-    createItemsDOM = (data) =>{
-        if (Array.isArray(data)){
-            gridMain = document.querySelector('#grid');
+    createItemsDOM = (data, uniqueCity = false) =>{
+        if (!uniqueCity){
             data.forEach(city => {
                 if (popularCities.includes(city[2])){
                     getMetaInfoCurrent(city[3], city[4]).then(response => {
@@ -78,7 +70,7 @@ window.onload = () =>{
                         titleTemperature.textContent = 'Temperatura'
                         titleTemperature.classList.add('poppins', 'font-light', 'text-center' , 'text-sm');
                         let temperatureDOM = document.createElement('p');
-                        temperatureDOM.classList.add('poppins', 'font-extralight', 'text-center');
+                        temperatureDOM.classList.add('poppins', 'font-extralight', 'text-center', 'text-lg');
                         temperatureDOM.textContent = response.current.temperature_2m + response.current_units.temperature_2m;
                         divTemperature.appendChild(titleTemperature);
                         divTemperature.appendChild(temperatureDOM)
@@ -118,20 +110,67 @@ window.onload = () =>{
                     });
                 }
             });
-
         }else{
+            //Imprimimos la informacion de la ciudad en especifico
+            infoCityBox.classList.remove('hidden');
+            gridMain.classList.add('hidden');
             console.log(data)
         }
-
-
-
     }
 
 
+    let citySearch = (event) =>{
+        if (event.key === 'Enter' || event.type === 'click'){
+            console.log('Buscando... ' + searchBar.value);
+            getDataCity(searchBar.value);
+        }
+    }
+
+    let deleteBoxMessage = () =>{
+        boxMessageSearch.textContent = '';
+        boxMessageSearch.setAttribute('class', 'boxMessageSearch h-6 my-2');
+    }
+
+    let goBack = () =>{
+        gridMain.classList.remove('hidden');
+        infoCityBox.classList.add('hidden');
+    }
+
+
+    searchBar.addEventListener('keyup', () => citySearch(event));
+    btnSearch.addEventListener('click', () => citySearch(event));
+    btnBack.addEventListener('click', goBack);
+
     getDataCity();
+
 
 }
 
+
+
+
+    /*
+    async function saveMeteoInfo(cities, latitude = null, longitude = null) {
+        let meteoInfoDefault = [];
+        if (Array.isArray(cities)){
+            
+            cities.forEach(city => {
+                let data = getMetaInfo(city[3], city[4])
+                meteoInfoDefault.push(data);
+            });
+            console.log(data);
+        }
+    }
+    */
+
+
+    
+    /*async function getMetaInfoPrevious(latitude, longitude) {
+        let response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relative_humidity_2m,precipitation_probability&forecast_days=1`);
+        let responseJSON = await response.json();
+        return responseJSON;
+    }
+    */
 
 
 
